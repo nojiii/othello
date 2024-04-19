@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import styles from './index.module.css';
-
+//level1 めくれる 点数
+//level2 候補表示
+//level3 パス、二回パス終了
+//level3.1 スマホ対応
 const Home = () => {
   const [turnColor, setTurnColor] = useState(1);
   const [board, setBoard] = useState([
@@ -17,12 +20,21 @@ const Home = () => {
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
     const newBoard = structuredClone(board);
-    newBoard[y][x] = turnColor;
-    if (turnColor === 1) {
-      setTurnColor(2);
-    } else {
-      setTurnColor(1);
+    if (board[y + 1] !== undefined && board[y + 1][x] === 2 / turnColor) {
+      newBoard[y][x] = turnColor;
+      setTurnColor(2 / turnColor);
     }
+    //for() //調べる
+    const directions = [
+      [0, -1],
+      [0, 1],
+      [1, -1],
+      [1, 0],
+      [1, 1],
+      [-1, -1],
+      [-1, 0],
+      [-1, 1],
+    ];
     setBoard(newBoard);
   };
   return (
@@ -34,7 +46,7 @@ const Home = () => {
               {color !== 0 && (
                 <div
                   className={styles.stone}
-                  style={{ background: color === 1 ? '#000' : '#fff' }}
+                  style={{ background: color === 1 ? '#000' : '#fff' }} //リファクタリング
                 />
               )}
             </div>
