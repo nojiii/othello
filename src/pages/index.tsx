@@ -4,6 +4,21 @@ import styles from './index.module.css';
 //level2 候補表示
 //level3 パス、二回パス終了
 //level3.1 スマホ対応
+// const flipStones = (board: number[][], turnColor: number, x: number, y: number) => {};
+
+// const directions = [
+//   [0, -1],
+//   [0, 1],
+//   [1, -1],
+//   [1, 0],
+//   [1, 1],
+//   [-1, -1],
+//   [-1, 0],
+//   [-1, 1],
+// ];
+
+// const checkStones = (board: number[][], turnColor: number, x: number, y: number) => {};
+
 const Home = () => {
   const [turnColor, setTurnColor] = useState(1);
   const [board, setBoard] = useState([
@@ -17,24 +32,21 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
+
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
     const newBoard = structuredClone(board);
-    if (board[y + 1] !== undefined && board[y + 1][x] === 2 / turnColor) {
-      newBoard[y][x] = turnColor;
-      setTurnColor(2 / turnColor);
-    }
-    //for() //調べる
-    const directions = [
-      [0, -1],
-      [0, 1],
-      [1, -1],
-      [1, 0],
-      [1, 1],
-      [-1, -1],
-      [-1, 0],
-      [-1, 1],
-    ];
+    setTurnColor(2 / turnColor);
+
+    // for (const direction of directions) {
+    //   while(true) {
+    //     const find_opponent = false;
+    //     if() {
+    //       break;
+    //     }
+    //   }
+    // }
+
     setBoard(newBoard);
   };
   return (
