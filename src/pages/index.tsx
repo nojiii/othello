@@ -6,18 +6,33 @@ import styles from './index.module.css';
 //level3.1 スマホ対応
 // const flipStones = (board: number[][], turnColor: number, x: number, y: number) => {};
 
-// const directions = [
-//   [0, -1],
-//   [0, 1],
-//   [1, -1],
-//   [1, 0],
-//   [1, 1],
-//   [-1, -1],
-//   [-1, 0],
-//   [-1, 1],
-// ];
+const directions = [
+  [0, -1],
+  [1, -1],
+  [1, 0],
+  [1, 1],
+  [0, 1],
+  [-1, 1],
+  [-1, 0],
+  [-1, -1],
+];
 
-// const checkStones = (board: number[][], turnColor: number, x: number, y: number) => {};
+function checkQueue(board: number[][], x: number, y: number, direction: number[]): number[] {
+  const queue: number[] = [];
+  let time: number = 1;
+  while (
+    y + time * direction[1] < 8 &&
+    x + time * direction[0] < 8 &&
+    y + time * direction[1] > -1 &&
+    x + time * direction[0] > -1 &&
+    !(board[y + time * direction[1]][x + time * direction[0]] === undefined)
+  ) {
+    console.log('test');
+    queue.push(board[y + time * direction[1]][x + time * direction[0]]);
+    time++;
+  }
+  return queue;
+}
 
 const Home = () => {
   const [turnColor, setTurnColor] = useState(1);
@@ -36,17 +51,12 @@ const Home = () => {
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
     const newBoard = structuredClone(board);
+
+    for (const direction of directions) {
+      console.log(checkQueue(board, x, y, direction));
+    }
+
     setTurnColor(2 / turnColor);
-
-    // for (const direction of directions) {
-    //   while(true) {
-    //     const find_opponent = false;
-    //     if() {
-    //       break;
-    //     }
-    //   }
-    // }
-
     setBoard(newBoard);
   };
   return (
