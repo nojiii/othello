@@ -5,6 +5,30 @@ import styles from './index.module.css';
 //level3 パス、二回パス終了
 //level3.1 スマホ対応
 
+//石の位置による評価値
+const valueTable = [
+  [120, -20, 20, 5, 5, 20, -20, 120],
+  [-20, -40, -5, -5, -5, -5, -40, -20],
+  [20, -5, 15, 3, 3, 15, -5, 20],
+  [5, -5, 3, 3, 3, 3, -5, 5],
+  [5, -5, 3, 3, 3, 3, -5, 5],
+  [20, -5, 15, 3, 3, 15, -5, 20],
+  [-20, -40, -5, -5, -5, -5, -40, -20],
+  [120, -20, 20, 5, 5, 20, -20, 120],
+];
+
+//点数評価関数
+function evaluate(board: number[][], turnColor: number): number {
+  let value = 0;
+
+  for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      if (board[i][j] === turnColor) value += valueTable[i][j];
+    }
+  }
+  return value;
+}
+
 const directions = [
   [0, -1],
   [1, -1],
@@ -47,24 +71,6 @@ function canFlip(turnColor: number, queue: number[]): boolean {
   return false;
 }
 
-// function flipStones(
-//   board: number[][],
-//   x: number,
-//   y: number,
-//   turnColor: number,
-//   direction: number[],
-//   queue: number[],
-// ): number[][] {
-//   for (let i = 0; i < queue.length; i++) {
-//     if (queue[i] === 2 / turnColor) {
-//       board[y + i * direction[1]][x + i * direction[0]] = turnColor;
-//     } else {
-//       break;
-//     }
-//   }
-//   return board;
-// }
-
 const Home = () => {
   const [turnColor, setTurnColor] = useState(1);
   const [board, setBoard] = useState([
@@ -78,7 +84,6 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
-
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
     const newBoard = structuredClone(board);
@@ -92,7 +97,6 @@ const Home = () => {
           } else if (queue[i] === turnColor) {
             newBoard[y + i * direction[1]][x + i * direction[0]] = turnColor;
             setTurnColor(2 / turnColor);
-
             break;
           }
         }
@@ -116,6 +120,9 @@ const Home = () => {
             </div>
           )),
         )}
+      </div>
+      <div className={styles.scores} id="score">
+        スコア
       </div>
     </div>
   );
