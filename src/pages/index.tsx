@@ -24,8 +24,7 @@ function checkQueue(board: number[][], x: number, y: number, direction: number[]
     y + time * direction[1] < 8 &&
     x + time * direction[0] < 8 &&
     y + time * direction[1] > -1 &&
-    x + time * direction[0] > -1 &&
-    !(board[y + time * direction[1]][x + time * direction[0]] === undefined)
+    x + time * direction[0] > -1
   ) {
     console.log('test');
     queue.push(board[y + time * direction[1]][x + time * direction[0]]);
