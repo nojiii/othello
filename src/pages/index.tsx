@@ -4,7 +4,6 @@ import styles from './index.module.css';
 //level2 候補表示
 //level3 パス、二回パス終了
 //level3.1 スマホ対応
-// const flipStones = (board: number[][], turnColor: number, x: number, y: number) => {};
 
 const directions = [
   [0, -1],
@@ -26,12 +25,45 @@ function checkQueue(board: number[][], x: number, y: number, direction: number[]
     y + time * direction[1] > -1 &&
     x + time * direction[0] > -1
   ) {
-    console.log('test');
     queue.push(board[y + time * direction[1]][x + time * direction[0]]);
     time++;
   }
+  console.log(queue);
   return queue;
 }
+
+function canFlip(turnColor: number, queue: number[]): boolean {
+  let items: number = 0;
+  for (let i = 0; i < queue.length; i++) {
+    if (items >= 1 && turnColor === queue[i]) {
+      console.log('can!!!');
+      return true;
+    } else if (queue[i] === 2 / turnColor) {
+      items++;
+    } else if (queue[i] === 0) {
+      return false;
+    }
+  }
+  return false;
+}
+
+// function flipStones(
+//   board: number[][],
+//   x: number,
+//   y: number,
+//   turnColor: number,
+//   direction: number[],
+//   queue: number[],
+// ): number[][] {
+//   for (let i = 0; i < queue.length; i++) {
+//     if (queue[i] === 2 / turnColor) {
+//       board[y + i * direction[1]][x + i * direction[0]] = turnColor;
+//     } else {
+//       break;
+//     }
+//   }
+//   return board;
+// }
 
 const Home = () => {
   const [turnColor, setTurnColor] = useState(1);
@@ -52,10 +84,21 @@ const Home = () => {
     const newBoard = structuredClone(board);
 
     for (const direction of directions) {
-      console.log(checkQueue(board, x, y, direction));
+      if (canFlip(turnColor, checkQueue(board, x, y, direction))) {
+        const queue: number[] = checkQueue(board, x, y, direction);
+        for (let i = 0; i < queue.length; i++) {
+          if (queue[i] === 2 / turnColor) {
+            newBoard[y + i * direction[1]][x + i * direction[0]] = turnColor;
+          } else if (queue[i] === turnColor) {
+            newBoard[y + i * direction[1]][x + i * direction[0]] = turnColor;
+            setTurnColor(2 / turnColor);
+
+            break;
+          }
+        }
+      }
     }
 
-    setTurnColor(2 / turnColor);
     setBoard(newBoard);
   };
   return (
