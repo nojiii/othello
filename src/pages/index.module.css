@@ -32,6 +32,8 @@
 }
 
 .scores {
+  display: flex;
+  flex-flow: column;
   align-items: center;
-  margin: auto;
+  width: 20%;
 }

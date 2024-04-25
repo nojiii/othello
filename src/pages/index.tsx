@@ -18,7 +18,7 @@ const valueTable = [
 ];
 
 //点数評価関数
-function evaluate(board: number[][], turnColor: number): number {
+function evaluate(board: number[][], turnColor: number): void {
   let value = 0;
 
   for (let i = 0; i < 8; i++) {
@@ -26,7 +26,17 @@ function evaluate(board: number[][], turnColor: number): number {
       if (board[i][j] === turnColor) value += valueTable[i][j];
     }
   }
-  return value;
+  if (turnColor === 1) {
+    const blackScore = document.getElementById('black_score');
+    if (blackScore) {
+      blackScore.textContent = `黒：${String(value)}`;
+    }
+  } else if (turnColor === 2) {
+    const whiteScore = document.getElementById('white_score');
+    if (whiteScore) {
+      whiteScore.textContent = `白：${String(value)}`;
+    }
+  }
 }
 
 const directions = [
@@ -71,6 +81,13 @@ function canFlip(turnColor: number, queue: number[]): boolean {
   return false;
 }
 
+function showTurn(turnColor: number): void {
+  const nowTurn = document.getElementById('now_turn');
+  if (nowTurn) {
+    nowTurn.textContent = `${2 / turnColor === 1 ? '黒' : '白'}のターンです`;
+  }
+}
+
 const Home = () => {
   const [turnColor, setTurnColor] = useState(1);
   const [board, setBoard] = useState([
@@ -97,12 +114,14 @@ const Home = () => {
           } else if (queue[i] === turnColor) {
             newBoard[y + i * direction[1]][x + i * direction[0]] = turnColor;
             setTurnColor(2 / turnColor);
+            showTurn(turnColor);
+            evaluate(board, 1);
+            evaluate(board, 2);
             break;
           }
         }
       }
     }
-
     setBoard(newBoard);
   };
   return (
@@ -121,8 +140,17 @@ const Home = () => {
           )),
         )}
       </div>
-      <div className={styles.scores} id="score">
+      <div className={styles.scores}>
         スコア
+        <div className={styles.black_score} id="black_score">
+          黒：
+        </div>
+        <div className={styles.white_score} id="white_score">
+          白：
+        </div>
+        <div className={styles.now_turn} id="now_turn">
+          黒のターンです
+        </div>
       </div>
     </div>
   );
