@@ -82,6 +82,15 @@ function canFlip(
   return false;
 }
 
+function showCand(board: number[][], x: number, y: number, turnColor: number) {
+  for (let i = 0; i < directions.length; i++) {
+    if (canFlip(board, x, y, turnColor, checkQueue(board, x, y, directions[i]))) {
+      return <div className={styles.can} />;
+    }
+  }
+  return <div />;
+}
+
 const Home = () => {
   const [turnColor, setTurnColor] = useState(1);
   const [board, setBoard] = useState([
@@ -128,6 +137,7 @@ const Home = () => {
                   style={{ background: color === 1 ? '#000' : '#fff' }} //リファクタリング
                 />
               )}
+              {showCand(board, x, y, turnColor)}
             </div>
           )),
         )}

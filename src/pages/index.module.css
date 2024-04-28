@@ -40,5 +40,8 @@
 }
 
 .can {
+  width: 1em;
+  height: 1em;
   background-color: red;
+  border-radius: 100%;
 }
