@@ -6,7 +6,7 @@ import styles from './index.module.css';
 //level3.1 スマホ対応
 
 //点数評価関数
-function evaluate(board: number[][], turnColor: number): void {
+function evaluate(board: number[][], turnColor: number): number[] {
   let blackValue = 0;
   let whiteValue = 0;
 
@@ -27,9 +27,19 @@ function evaluate(board: number[][], turnColor: number): void {
   // ターン表示
   const nowTurn = document.getElementById('now_turn');
   if (nowTurn) {
-    nowTurn.textContent = `${2 / turnColor === 1 ? '黒' : '白'}のターンです`;
+    nowTurn.textContent = `${2 / turnColor === 1 ? '黒' : '白'}のターン`;
   }
-  return undefined;
+  return [blackValue, whiteValue];
+}
+
+let pass: number = 0;
+function quit(turnColor: number, scores: number[]) {
+  if (scores[0] === scores[1]) {
+    alert('終了：同点です');
+  } else {
+    alert('終了：' + `${scores[0] > scores[1] ? '黒' : '白'}の勝ちです`);
+  }
+  location.reload();
 }
 
 const directions = [
@@ -146,19 +156,23 @@ const Home = () => {
       <div className={styles.scores}>
         スコア
         <div className={styles.black_score} id="black_score">
-          黒：
+          黒：2
         </div>
         <div className={styles.white_score} id="white_score">
-          白：
+          白：2
         </div>
         <div className={styles.now_turn} id="now_turn">
-          黒のターンです
+          黒のターン
         </div>
         <button
           className={styles.pass}
           onClick={() => {
             setTurnColor(2 / turnColor);
             evaluate(board, turnColor);
+            pass++;
+            if (pass >= 2) {
+              quit(turnColor, evaluate(board, turnColor));
+            }
           }}
         >
           パス
