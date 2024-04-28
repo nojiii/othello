@@ -5,37 +5,24 @@ import styles from './index.module.css';
 //level3 パス、二回パス終了
 //level3.1 スマホ対応
 
-//石の位置による評価値
-const valueTable = [
-  [120, -20, 20, 5, 5, 20, -20, 120],
-  [-20, -40, -5, -5, -5, -5, -40, -20],
-  [20, -5, 15, 3, 3, 15, -5, 20],
-  [5, -5, 3, 3, 3, 3, -5, 5],
-  [5, -5, 3, 3, 3, 3, -5, 5],
-  [20, -5, 15, 3, 3, 15, -5, 20],
-  [-20, -40, -5, -5, -5, -5, -40, -20],
-  [120, -20, 20, 5, 5, 20, -20, 120],
-];
-
 //点数評価関数
-function evaluate(board: number[][], turnColor: number): void {
-  let value = 0;
+function evaluate(board: number[][]): void {
+  let blackValue = 0;
+  let whiteValue = 0;
 
   for (let i = 0; i < 8; i++) {
     for (let j = 0; j < 8; j++) {
-      if (board[i][j] === turnColor) value += valueTable[i][j];
+      if (board[i][j] === 1) blackValue += 1;
+      if (board[i][j] === 2) whiteValue += 1;
     }
   }
-  if (turnColor === 1) {
-    const blackScore = document.getElementById('black_score');
-    if (blackScore) {
-      blackScore.textContent = `黒：${String(value)}`;
-    }
-  } else if (turnColor === 2) {
-    const whiteScore = document.getElementById('white_score');
-    if (whiteScore) {
-      whiteScore.textContent = `白：${String(value)}`;
-    }
+  const blackScore = document.getElementById('black_score');
+  if (blackScore) {
+    blackScore.textContent = `黒：${String(blackValue)}`;
+  }
+  const whiteScore = document.getElementById('white_score');
+  if (whiteScore) {
+    whiteScore.textContent = `白：${String(whiteValue)}`;
   }
 }
 
@@ -83,7 +70,7 @@ function canFlip(
       return true;
     } else if (queue[i] === 2 / turnColor) {
       items++;
-    } else if (queue[i] === 0) {
+    } else if (queue[i] === 0 || turnColor === queue[i]) {
       return false;
     }
   }
@@ -124,14 +111,13 @@ const Home = () => {
             newBoard[y + i * direction[1]][x + i * direction[0]] = turnColor;
             setTurnColor(2 / turnColor);
             showTurn(turnColor);
-            evaluate(board, 1);
-            evaluate(board, 2);
             break;
           }
         }
       }
     }
     setBoard(newBoard);
+    evaluate(newBoard);
   };
   return (
     <div className={styles.container}>
