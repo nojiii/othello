@@ -29,6 +29,7 @@ function evaluate(board: number[][], turnColor: number): void {
   if (nowTurn) {
     nowTurn.textContent = `${2 / turnColor === 1 ? '黒' : '白'}のターンです`;
   }
+  return undefined;
 }
 
 const directions = [
@@ -88,7 +89,7 @@ function showCand(board: number[][], x: number, y: number, turnColor: number) {
       return <div className={styles.can} />;
     }
   }
-  return <div />;
+  return undefined;
 }
 
 const Home = () => {
@@ -153,6 +154,15 @@ const Home = () => {
         <div className={styles.now_turn} id="now_turn">
           黒のターンです
         </div>
+        <button
+          className={styles.pass}
+          onClick={() => {
+            setTurnColor(2 / turnColor);
+            evaluate(board, turnColor);
+          }}
+        >
+          パス
+        </button>
       </div>
     </div>
   );

@@ -42,6 +42,11 @@
 .can {
   width: 1em;
   height: 1em;
-  background-color: red;
+  background-color: rgb(130 181 111);
   border-radius: 100%;
+}
+
+.pass {
+  color: blue;
+  background-color: aqua;
 }
