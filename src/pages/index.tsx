@@ -129,6 +129,7 @@ const Home = () => {
             newBoard[y + i * direction[1]][x + i * direction[0]] = turnColor;
             setTurnColor(2 / turnColor);
             evaluate(newBoard, turnColor);
+            pass = 0;
             break;
           }
         }
