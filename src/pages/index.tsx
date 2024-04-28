@@ -66,7 +66,16 @@ function checkQueue(board: number[][], x: number, y: number, direction: number[]
   return queue;
 }
 
-function canFlip(turnColor: number, queue: number[]): boolean {
+function canFlip(
+  board: number[][],
+  x: number,
+  y: number,
+  turnColor: number,
+  queue: number[],
+): boolean {
+  if (board[y][x] !== 0) {
+    return false;
+  }
   let items: number = 0;
   for (let i = 0; i < queue.length; i++) {
     if (items >= 1 && turnColor === queue[i]) {
@@ -106,7 +115,7 @@ const Home = () => {
     const newBoard = structuredClone(board);
 
     for (const direction of directions) {
-      if (canFlip(turnColor, checkQueue(board, x, y, direction))) {
+      if (canFlip(board, x, y, turnColor, checkQueue(board, x, y, direction))) {
         const queue: number[] = checkQueue(board, x, y, direction);
         for (let i = 0; i < queue.length; i++) {
           if (queue[i] === 2 / turnColor) {
