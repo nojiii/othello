@@ -38,3 +38,7 @@
   align-items: center;
   width: 10em;
 }
+
+.can {
+  background-color: red;
+}

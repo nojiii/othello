@@ -6,7 +6,7 @@ import styles from './index.module.css';
 //level3.1 スマホ対応
 
 //点数評価関数
-function evaluate(board: number[][]): void {
+function evaluate(board: number[][], turnColor: number): void {
   let blackValue = 0;
   let whiteValue = 0;
 
@@ -23,6 +23,11 @@ function evaluate(board: number[][]): void {
   const whiteScore = document.getElementById('white_score');
   if (whiteScore) {
     whiteScore.textContent = `白：${String(whiteValue)}`;
+  }
+  // ターン表示
+  const nowTurn = document.getElementById('now_turn');
+  if (nowTurn) {
+    nowTurn.textContent = `${2 / turnColor === 1 ? '黒' : '白'}のターンです`;
   }
 }
 
@@ -77,13 +82,6 @@ function canFlip(
   return false;
 }
 
-function showTurn(turnColor: number): void {
-  const nowTurn = document.getElementById('now_turn');
-  if (nowTurn) {
-    nowTurn.textContent = `${2 / turnColor === 1 ? '黒' : '白'}のターンです`;
-  }
-}
-
 const Home = () => {
   const [turnColor, setTurnColor] = useState(1);
   const [board, setBoard] = useState([
@@ -110,14 +108,13 @@ const Home = () => {
           } else if (queue[i] === turnColor) {
             newBoard[y + i * direction[1]][x + i * direction[0]] = turnColor;
             setTurnColor(2 / turnColor);
-            showTurn(turnColor);
+            evaluate(newBoard, turnColor);
             break;
           }
         }
       }
     }
     setBoard(newBoard);
-    evaluate(newBoard);
   };
   return (
     <div className={styles.container}>
