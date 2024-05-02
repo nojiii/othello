@@ -145,13 +145,13 @@ const Home = () => {
       </div>
       <div className={styles.scores}>
         スコア
-        <div className={styles.black_score} id="black_score">
+        <div className={styles.score} id="black_score">
           黒：2
         </div>
-        <div className={styles.white_score} id="white_score">
+        <div className={styles.score} id="white_score">
           白：2
         </div>
-        <div className={styles.now_turn} id="now_turn">
+        <div className={styles.nowturn} id="now_turn">
           黒のターン
         </div>
       </div>

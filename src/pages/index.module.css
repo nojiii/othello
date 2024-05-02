@@ -45,3 +45,11 @@
   background-color: rgb(130 181 111);
   border-radius: 100%;
 }
+
+.score {
+  font-weight: bold;
+}
+
+.nowturn {
+  font-size: 1.5em;
+}
