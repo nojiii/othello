@@ -32,16 +32,6 @@ function evaluate(board: number[][], turnColor: number): number[] {
   return [blackValue, whiteValue];
 }
 
-let pass: number = 0;
-function quit(turnColor: number, scores: number[]) {
-  if (scores[0] === scores[1]) {
-    alert('終了：同点です');
-  } else {
-    alert('終了：' + `${scores[0] > scores[1] ? '黒' : '白'}の勝ちです`);
-  }
-  location.reload();
-}
-
 const directions = [
   [0, -1],
   [1, -1],
@@ -129,7 +119,6 @@ const Home = () => {
             newBoard[y + i * direction[1]][x + i * direction[0]] = turnColor;
             setTurnColor(2 / turnColor);
             evaluate(newBoard, turnColor);
-            pass = 0;
             break;
           }
         }
@@ -165,19 +154,6 @@ const Home = () => {
         <div className={styles.now_turn} id="now_turn">
           黒のターン
         </div>
-        <button
-          className={styles.pass}
-          onClick={() => {
-            setTurnColor(2 / turnColor);
-            evaluate(board, turnColor);
-            pass++;
-            if (pass >= 2) {
-              quit(turnColor, evaluate(board, turnColor));
-            }
-          }}
-        >
-          パス
-        </button>
       </div>
     </div>
   );
