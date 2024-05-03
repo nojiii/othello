@@ -72,7 +72,6 @@ function canFlip(
   let items: number = 0;
   for (let i = 0; i < queue.length; i++) {
     if (items >= 1 && turnColor === queue[i]) {
-      console.log('can!!!');
       return true;
     } else if (queue[i] === 2 / turnColor) {
       items++;
@@ -126,6 +125,10 @@ const Home = () => {
     }
     setBoard(newBoard);
   };
+  const passClick = (newBoard: number[][], turnColor: number) => {
+    setTurnColor(2 / turnColor);
+    evaluate(newBoard, turnColor);
+  };
   return (
     <div className={styles.container}>
       <div className={styles.board}>
@@ -163,6 +166,7 @@ const Home = () => {
         <div style={{ margin: '1em', fontSize: '2em' }} id="now_turn">
           Black
         </div>
+        <button onClick={() => passClick(board, turnColor)}>パス</button>
       </div>
     </div>
   );
