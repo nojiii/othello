@@ -27,7 +27,7 @@ function evaluate(board: number[][], turnColor: number): number[] {
   // ターン表示
   const nowTurn = document.getElementById('now_turn');
   if (nowTurn) {
-    nowTurn.textContent = `${2 / turnColor === 1 ? '黒' : '白'}のターン`;
+    nowTurn.textContent = `${2 / turnColor === 1 ? 'Black' : 'White'}`;
   }
   return [blackValue, whiteValue];
 }
@@ -143,16 +143,25 @@ const Home = () => {
           )),
         )}
       </div>
-      <div className={styles.scores}>
-        スコア
-        <div className={styles.score} id="black_score">
-          黒：2
+      <div style={{ display: 'flex', flexFlow: 'column', alignItems: 'center', width: '10em' }}>
+        SCORES
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            flexFlow: 'column',
+            padding: '0.5em',
+          }}
+        >
+          <div className={styles.score} id="black_score">
+            黒：2
+          </div>
+          <div className={styles.score} id="white_score">
+            白：2
+          </div>
         </div>
-        <div className={styles.score} id="white_score">
-          白：2
-        </div>
-        <div className={styles.nowturn} id="now_turn">
-          黒のターン
+        <div style={{ margin: '1em', fontSize: '2em' }} id="now_turn">
+          Black
         </div>
       </div>
     </div>
