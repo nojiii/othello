@@ -203,7 +203,15 @@ const Home = () => {
           )),
         )}
       </div>
-      <div style={{ display: 'flex', flexFlow: 'column', alignItems: 'center', width: '14em' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexFlow: 'column',
+          alignItems: 'center',
+          width: '14em',
+          margin: '1em',
+        }}
+      >
         SCORES
         <div
           style={{
@@ -211,15 +219,36 @@ const Home = () => {
             justifyContent: 'flex-start',
             flexFlow: 'column',
             padding: '0.5em',
+            fontWeight: 'lighter',
           }}
         >
           <div className={styles.score}>黒：{blackCount}</div>
           <div className={styles.score}>白：{whiteCount}</div>
         </div>
-        <div style={{ margin: '1em', fontSize: '2em' }}>{turnColor === 1 ? 'Black' : 'White'}</div>
-        <div>{isGameEnd === true ? winState() : ''}</div>
-        <button onClick={isGameEnd ? () => quit() : () => passClick(board)}>
-          {isGameEnd ? '終了' : 'パス'}
+        <div
+          style={{
+            margin: '1em',
+            fontSize: '2em',
+            fontWeight: 'lighter',
+            width: '3em',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          {turnColor === 1 ? 'Black' : 'White'}
+        </div>
+        <div style={{ margin: '0.5em 0 2em 0' }}>{isGameEnd === true ? winState() : '　'}</div>
+        <button
+          onClick={isGameEnd ? () => quit() : () => passClick(board)}
+          style={{
+            fontWeight: 'lighter',
+            border: 'none',
+            backgroundColor: 'black',
+            color: 'white',
+            padding: '0.5em 1em',
+          }}
+        >
+          {isGameEnd ? '終了' : 'pass'}
         </button>
       </div>
     </div>
