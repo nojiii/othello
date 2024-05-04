@@ -153,11 +153,11 @@ const Home = () => {
 
   function winState(): string {
     if (blackCount === whiteCount) {
-      return '引き分け';
+      return 'DRAW';
     } else if (blackCount > whiteCount) {
-      return '黒の勝ち';
+      return 'Black WIN';
     } else {
-      return '白の勝ち';
+      return 'White WIN';
     }
   }
   //終了
@@ -240,6 +240,7 @@ const Home = () => {
             flexFlow: 'column',
             padding: '0.5em',
             fontWeight: 'lighter',
+            width: '4.3em',
           }}
         >
           <div className={styles.score}>黒：{blackCount}</div>
@@ -250,14 +251,17 @@ const Home = () => {
             margin: '1em',
             fontSize: '2em',
             fontWeight: 'lighter',
-            width: '3em',
+            width: '6em',
             display: 'flex',
             justifyContent: 'center',
           }}
         >
-          {turnColor === 1 ? 'Black' : 'White'}
+          {isGameEnd === true ? winState() : turnColor === 1 ? 'Black' : 'White'}
         </div>
-        <div style={{ margin: '0.5em 0 2em 0' }}>{isGameEnd === true ? winState() : '　'}</div>
+        {/* 勝利時の表示を別の場所に表示する */}
+        {/* <div style={{ margin: '0.5em 0 2em 0', height: '1em' }}>
+          {isGameEnd === true ? winState() : ''}
+        </div> */}
         <button
           onClick={isGameEnd ? () => quit() : () => passClick(board)}
           style={{
