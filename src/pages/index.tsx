@@ -148,6 +148,7 @@ const Home = () => {
     setBoard(newBoard);
     evaluate(newBoard);
     setGameEnd(false);
+    setPasstime(0);
   }
 
   function winState(): string {
@@ -264,7 +265,9 @@ const Home = () => {
             border: 'none',
             backgroundColor: 'black',
             color: 'white',
-            padding: '0.5em 1em',
+            width: '4em',
+            height: '3em',
+            borderRadius: '1em',
           }}
         >
           {isGameEnd ? '終了' : 'pass'}
