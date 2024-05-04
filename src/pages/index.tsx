@@ -134,6 +134,21 @@ const Home = () => {
   //     return false;
   //   }
   // }
+  function reset() {
+    const newBoard = [
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 2, 0, 0, 0],
+      [0, 0, 0, 2, 1, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+    ];
+    setBoard(newBoard);
+    evaluate(newBoard);
+    setGameEnd(false);
+  }
 
   function winState(): string {
     if (blackCount === whiteCount) {
@@ -147,6 +162,7 @@ const Home = () => {
   //終了
   function quit() {
     alert('終了します');
+    reset();
   }
   //パス(二回連続で押されたら終了)
   function pass() {
