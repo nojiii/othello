@@ -5,33 +5,6 @@ import styles from './index.module.css';
 //level3 パス、二回パス終了
 //level3.1 スマホ対応
 
-//点数評価関数
-function evaluate(board: number[][], turnColor: number): number[] {
-  let blackValue = 0;
-  let whiteValue = 0;
-
-  for (let i = 0; i < 8; i++) {
-    for (let j = 0; j < 8; j++) {
-      if (board[i][j] === 1) blackValue += 1;
-      if (board[i][j] === 2) whiteValue += 1;
-    }
-  }
-  const blackScore = document.getElementById('black_score');
-  if (blackScore) {
-    blackScore.textContent = `黒：${String(blackValue)}`;
-  }
-  const whiteScore = document.getElementById('white_score');
-  if (whiteScore) {
-    whiteScore.textContent = `白：${String(whiteValue)}`;
-  }
-  // ターン表示
-  const nowTurn = document.getElementById('now_turn');
-  if (nowTurn) {
-    nowTurn.textContent = `${2 / turnColor === 1 ? 'Black' : 'White'}`;
-  }
-  return [blackValue, whiteValue];
-}
-
 const directions = [
   [0, -1],
   [1, -1],
@@ -42,55 +15,6 @@ const directions = [
   [-1, 0],
   [-1, -1],
 ];
-
-function checkQueue(board: number[][], x: number, y: number, direction: number[]): number[] {
-  const queue: number[] = [];
-  let time: number = 1;
-  while (
-    y + time * direction[1] < 8 &&
-    x + time * direction[0] < 8 &&
-    y + time * direction[1] > -1 &&
-    x + time * direction[0] > -1
-  ) {
-    queue.push(board[y + time * direction[1]][x + time * direction[0]]);
-    time++;
-  }
-  console.log(queue);
-  return queue;
-}
-
-function canFlip(
-  board: number[][],
-  x: number,
-  y: number,
-  turnColor: number,
-  queue: number[],
-): boolean {
-  if (board[y][x] !== 0) {
-    return false;
-  }
-  let items: number = 0;
-  for (let i = 0; i < queue.length; i++) {
-    if (items >= 1 && turnColor === queue[i]) {
-      return true;
-    } else if (queue[i] === 2 / turnColor) {
-      items++;
-    } else if (queue[i] === 0 || turnColor === queue[i]) {
-      return false;
-    }
-  }
-  return false;
-}
-
-function showCand(board: number[][], x: number, y: number, turnColor: number) {
-  for (let i = 0; i < directions.length; i++) {
-    if (canFlip(board, x, y, turnColor, checkQueue(board, x, y, directions[i]))) {
-      return <div className={styles.can} />;
-    }
-  }
-  return undefined;
-}
-
 const Home = () => {
   const [turnColor, setTurnColor] = useState(1);
   const [board, setBoard] = useState([
@@ -104,6 +28,136 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
+  //テスト用
+  // const [board, setBoard] = useState([
+  //   //なにもない0 黒1 白2
+  //   [1, 2, 0, 0, 0, 0, 0, 0],
+  //   [1, 2, 0, 0, 0, 0, 0, 0],
+  //   [1, 2, 0, 0, 0, 0, 0, 0],
+  //   [0, 0, 0, 0, 0, 0, 0, 0],
+  //   [0, 0, 0, 0, 0, 0, 0, 0],
+  //   [0, 0, 0, 0, 0, 0, 0, 0],
+  //   [0, 0, 0, 0, 0, 0, 0, 0],
+  //   [0, 0, 0, 0, 0, 0, 0, 0],
+  // ]);
+  const [blackCount, setBlackCount] = useState(2);
+  const [whiteCount, setWhiteCount] = useState(2);
+  const [isGameEnd, setGameEnd] = useState(false);
+  const [passTime, setPasstime] = useState(0);
+
+  //黒が何個あるか、白が何個あるかを配列で返す&黒と白の個数を更新する
+  function evaluate(board: number[][]): number[] {
+    let blackValue = 0;
+    let whiteValue = 0;
+
+    for (let i = 0; i < 8; i++) {
+      for (let j = 0; j < 8; j++) {
+        if (board[i][j] === 1) blackValue += 1;
+        if (board[i][j] === 2) whiteValue += 1;
+      }
+    }
+    setBlackCount(blackValue);
+    setWhiteCount(whiteValue);
+    return [blackValue, whiteValue];
+  }
+  function checkQueue(board: number[][], x: number, y: number, direction: number[]): number[] {
+    const queue: number[] = [];
+    let time: number = 1;
+    while (
+      y + time * direction[1] < 8 &&
+      x + time * direction[0] < 8 &&
+      y + time * direction[1] > -1 &&
+      x + time * direction[0] > -1
+    ) {
+      queue.push(board[y + time * direction[1]][x + time * direction[0]]);
+      time++;
+    }
+    // console.log(queue);
+    return queue;
+  }
+  function canFlip(
+    board: number[][],
+    x: number,
+    y: number,
+    turnColor: number,
+    queue: number[],
+  ): boolean {
+    if (board[y][x] !== 0) {
+      return false;
+    }
+    let items: number = 0;
+    for (let i = 0; i < queue.length; i++) {
+      if (items >= 1 && turnColor === queue[i]) {
+        // console.log('can', x, y, 'color:', turnColor);
+        return true;
+      } else if (queue[i] === 2 / turnColor) {
+        items++;
+      } else if (queue[i] === 0 || turnColor === queue[i]) {
+        return false;
+      }
+    }
+    return false;
+  }
+  //受け取った座標で駒がひっくり返せるならdiv要素をreturnする
+  function showCand(board: number[][], x: number, y: number, turnColor: number) {
+    for (let i = 0; i < directions.length; i++) {
+      if (canFlip(board, x, y, turnColor, checkQueue(board, x, y, directions[i]))) {
+        return <div className={styles.can} />;
+      }
+    }
+    return undefined;
+  }
+
+  //turnColorの時に置けるところがあるか判定する
+  // function canPlace(board: number[][], turnColor: number): boolean {
+  //   let place = 0;
+  //   for (let i = 0; i < 8; i++) {
+  //     for (let j = 0; j < 8; j++) {
+  //       if (showCand(board, i, j, turnColor) !== undefined) {
+  //         place++;
+  //         console.log(
+  //           'able to place :',
+  //           'x-',
+  //           i,
+  //           'y-',
+  //           j,
+  //           'turncolor:',
+  //           `${turnColor === 1 ? '黒' : '白'}`,
+  //         );
+  //       }
+  //     }
+  //   }
+  //   console.log('you can place:', place, 'point', 'turncolor:', `${turnColor === 1 ? '黒' : '白'}`);
+  //   if (place >= 1) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
+
+  function winState(): string {
+    if (blackCount === whiteCount) {
+      return '引き分け';
+    } else if (blackCount > whiteCount) {
+      return '黒の勝ち';
+    } else {
+      return '白の勝ち';
+    }
+  }
+  //終了
+  function quit() {
+    alert('終了します');
+  }
+  //パス(二回連続で押されたら終了)
+  function pass() {
+    setTurnColor(2 / turnColor);
+    const newPassTime = passTime + 1;
+    setPasstime(newPassTime);
+    if (newPassTime >= 2) {
+      setGameEnd(true);
+    }
+  }
+  //盤面がクリックされたとき
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
     const newBoard = structuredClone(board);
@@ -116,18 +170,21 @@ const Home = () => {
             newBoard[y + i * direction[1]][x + i * direction[0]] = turnColor;
           } else if (queue[i] === turnColor) {
             newBoard[y + i * direction[1]][x + i * direction[0]] = turnColor;
-            setTurnColor(2 / turnColor);
-            evaluate(newBoard, turnColor);
+            const newTurnColor = 2 / turnColor;
+            setTurnColor(newTurnColor);
+            evaluate(newBoard);
+            setBoard(newBoard);
+            setPasstime(0);
             break;
           }
         }
       }
     }
-    setBoard(newBoard);
   };
-  const passClick = (newBoard: number[][], turnColor: number) => {
-    setTurnColor(2 / turnColor);
-    evaluate(newBoard, turnColor);
+  //パスボタンがクリックされたとき
+  const passClick = (board: number[][]) => {
+    evaluate(board);
+    pass();
   };
   return (
     <div className={styles.container}>
@@ -146,7 +203,7 @@ const Home = () => {
           )),
         )}
       </div>
-      <div style={{ display: 'flex', flexFlow: 'column', alignItems: 'center', width: '10em' }}>
+      <div style={{ display: 'flex', flexFlow: 'column', alignItems: 'center', width: '14em' }}>
         SCORES
         <div
           style={{
@@ -156,17 +213,14 @@ const Home = () => {
             padding: '0.5em',
           }}
         >
-          <div className={styles.score} id="black_score">
-            黒：2
-          </div>
-          <div className={styles.score} id="white_score">
-            白：2
-          </div>
+          <div className={styles.score}>黒：{blackCount}</div>
+          <div className={styles.score}>白：{whiteCount}</div>
         </div>
-        <div style={{ margin: '1em', fontSize: '2em' }} id="now_turn">
-          Black
-        </div>
-        <button onClick={() => passClick(board, turnColor)}>パス</button>
+        <div style={{ margin: '1em', fontSize: '2em' }}>{turnColor === 1 ? 'Black' : 'White'}</div>
+        <div>{isGameEnd === true ? winState() : ''}</div>
+        <button onClick={isGameEnd ? () => quit() : () => passClick(board)}>
+          {isGameEnd ? '終了' : 'パス'}
+        </button>
       </div>
     </div>
   );
