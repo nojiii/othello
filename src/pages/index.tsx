@@ -163,7 +163,10 @@ const Home = () => {
     const newBoard = structuredClone(board);
 
     for (const direction of directions) {
-      if (canFlip(board, x, y, turnColor, checkQueue(board, x, y, direction))) {
+      if (
+        canFlip(board, x, y, turnColor, checkQueue(board, x, y, direction)) &&
+        isGameEnd !== true
+      ) {
         const queue: number[] = checkQueue(board, x, y, direction);
         for (let i = 0; i < queue.length; i++) {
           if (queue[i] === 2 / turnColor) {
